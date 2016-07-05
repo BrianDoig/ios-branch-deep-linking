@@ -139,7 +139,11 @@
             }
         };
     } else {
+        // This handles old code that doesn't implement the completionWithItemsHandler so we can safely ignore this warning but only because we handle it above in the if statement.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         shareViewController.completionHandler = completion;
+#pragma clang diagnostic pop
     }
     
     UIViewController *presentingViewController;

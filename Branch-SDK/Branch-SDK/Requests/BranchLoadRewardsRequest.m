@@ -50,12 +50,12 @@
         for (NSString *key in response.data) {
              NSInteger credits = [response.data[key] integerValue];
 
-             BNCPreferenceHelper *preferenceHelper = [BNCPreferenceHelper preferenceHelper];
-             if (credits != [preferenceHelper getCreditCountForBucket:key]) {
+             BNCPreferenceHelper *aPreferenceHelper = [BNCPreferenceHelper preferenceHelper];
+             if (credits != [aPreferenceHelper getCreditCountForBucket:key]) {
                  hasUpdated = YES;
              }
 
-             [preferenceHelper setCreditCount:credits forBucket:key];
+             [aPreferenceHelper setCreditCount:credits forBucket:key];
         }
         for(NSString *key in storedKeys) {
             if(![response.data objectForKey:key]) {

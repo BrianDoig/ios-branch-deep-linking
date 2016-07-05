@@ -131,7 +131,7 @@
 
 - (BNCServerResponse *)genericHTTPRequest:(NSURLRequest *)request log:(BOOL)log {
     __block NSURLResponse *_response = nil;
-    __block NSError *_error = nil;
+    __block NSError *_theError = nil;
     __block NSData *_respData = nil;
     
 #if defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 90000
@@ -139,7 +139,7 @@
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable urlResp, NSError * _Nullable error) {
         _response = urlResp;
-        _error = error;
+        _theError = error;
         _respData = data;
         dispatch_semaphore_signal(semaphore);
     }];
@@ -149,7 +149,7 @@
 #else
     _respData = [NSURLConnection sendSynchronousRequest:request returningResponse:&_response error:&_error];
 #endif
-    return [self processServerResponse:_response data:_respData error:_error log:log];
+    return [self processServerResponse:_response data:_respData error:_theError log:log];
 }
 
 
