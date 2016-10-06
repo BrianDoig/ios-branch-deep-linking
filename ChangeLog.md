@@ -1,5 +1,36 @@
 Branch iOS SDK change log
 
+- v0.12.11
+  * Support for Carthage sub modules
+  * Fix for few swift compatibility issues
+
+- v0.12.10
+  * Fix for issue causing initsession hang on cold start from universal link
+  * Adding few crash protection
+  * Removing BUO nullable fields  
+
+- v0.12.9
+  * Fixing the time delay for strong match check using SVC
+
+- v0.12.8
+  * Changes for supporting latest xcode updates
+  * Content Discovery feature
+  * Fix for an iOS 7 crash issue
+
+- v0.12.7
+  * iOS 10 Spotlight indexing support
+  * iMessage extensions support for deep linking and BUO
+  * retrieve content type in BUO from dictionary
+
+- v0.12.6
+  * Remove debug gesture
+  * Better instrumentation on retries
+  * Add checksumming to the release procedure
+  * Fix Branch & Mopub Fabric header conflict 
+  * Nullability and nonnull support for Swift
+  * Add campaign to link properties
+  * iOS 10 optimizations
+
 - v0.12.5
   * New Testbed App!
   * fix module.map path on Carthage project

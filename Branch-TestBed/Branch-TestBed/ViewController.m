@@ -26,7 +26,7 @@ NSString *user_id1 = @"abe@emailaddress.io";
 NSString *user_id2 = @"ben@emailaddress.io";
 NSString *live_key = @"live_key";
 NSString *test_key = @"test_key";
-
+NSString *type = @"some type";
 
 @interface ViewController ()
 
@@ -55,6 +55,9 @@ NSString *test_key = @"test_key";
     _branchUniversalObject.title = contentTitle;
     _branchUniversalObject.contentDescription = contentDescription;
     _branchUniversalObject.imageUrl = imageUrl;
+    _branchUniversalObject.price = 1000;
+    _branchUniversalObject.currency = @"$";
+    _branchUniversalObject.type = type;
     [_branchUniversalObject addMetadataKey:@"deeplink_text" value:[NSString stringWithFormat:
                                                                    @"This text was embedded as data in a Branch link with the following characteristics:\n\n  canonicalUrl: %@\n  title: %@\n  contentDescription: %@\n  imageUrl: %@\n", canonicalUrl, contentTitle, contentDescription, imageUrl]];
     [self refreshRewardPoints];
@@ -65,6 +68,7 @@ NSString *test_key = @"test_key";
     BranchLinkProperties *linkProperties = [[BranchLinkProperties alloc] init];
     linkProperties.feature = feature;
     linkProperties.channel = channel;
+    linkProperties.campaign = @"some campaign";
     [linkProperties addControlParam:@"$desktop_url" withValue: desktop_url];
     [linkProperties addControlParam:@"$ios_url" withValue: ios_url];
     
@@ -181,44 +185,25 @@ NSString *test_key = @"test_key";
 - (IBAction)shareLinkButtonTouchUpInside:(id)sender {
     BranchLinkProperties *linkProperties = [[BranchLinkProperties alloc] init];
     linkProperties.feature = feature;
+    linkProperties.campaign = @"sharing campaign";
     [linkProperties addControlParam:@"$desktop_url" withValue: desktop_url];
     [linkProperties addControlParam:@"$ios_url" withValue: ios_url];
     
-    [self.branchUniversalObject showShareSheetWithShareText: shareText
-                                                 completion:^(NSString *activityType, BOOL completed) {
-                                                     if (completed) {
-                                                         NSLog(@"%@", [NSString stringWithFormat:@"Branch TestBed: Completed sharing to %@", activityType]);
-                                                     } else {
-                                                         NSLog(@"%@", [NSString stringWithFormat:@"Branch TestBed: Sharing failed"]);
-                                                     }
-                                                 }];
+    [self.branchUniversalObject showShareSheetWithLinkProperties:linkProperties andShareText:shareText fromViewController:self.parentViewController completion:^(NSString *activityType, BOOL completed) {
+        if (completed) {
+            NSLog(@"%@", [NSString stringWithFormat:@"Branch TestBed: Completed sharing to %@", activityType]);
+        } else {
+            NSLog(@"%@", [NSString stringWithFormat:@"Branch TestBed: Sharing failed"]);
+        }
+    }];
 }
-
-
-/*
- - (IBAction)cmdIndexSpotlight:(id)sender {
- [self.branchUniversalObject listOnSpotlightWithCallback:^(NSString *url, NSError *error) {
- if (!error) {
- NSLog(@"Branch TestBed: ShortURL: %@", url);
- } else {
- NSLog(@"Branch TestBed: Error: %@", error);
- }
- }];
- }*/
 
 
 //example using callbackWithURLandSpotlightIdentifier
 - (IBAction)registerWithSpotlightButtonTouchUpInside:(id)sender {
     [self.branchUniversalObject addMetadataKey:@"deeplink_text" value:@"This link was generated for Spotlight registration"];
-    [self.branchUniversalObject listOnSpotlightWithIdentifierCallback:^(NSString *url, NSString *spotlightIdentifier,  NSError *error) {
-        if (!error) {
-            NSLog(@"Branch TestBed: ShortURL: %@   spotlight ID: %@", url, spotlightIdentifier);
-            [self showAlert:@"Spotlight Registration Succeeded" withDescription:[NSString stringWithFormat:@"Branch Link:\n%@\n\nSpotlight ID:\n%@", url, spotlightIdentifier]];
-        } else {
-            NSLog(@"Branch TestBed: Error: %@", error.localizedDescription);
-            [self showAlert:@"Spotlight Registration Failed" withDescription:error.localizedDescription];
-        }
-    }];
+    self.branchUniversalObject.automaticallyListOnSpotlight = YES;
+    [self.branchUniversalObject userCompletedAction:BNCRegisterViewEvent];
 }
 
 
